@@ -7,8 +7,11 @@ import subprocess
 
 from PIL import ImageGrab
 
+# All functions return strings
 # define constants
 NO_PATH_ERROR = "no files found at path specified"
+SUCCESS_MESSAGE = "COMMAND FINISHED SUCCESSFULLY"
+ERROR_MESSAGE = "SOMETHING WENT WRONG"
 
 
 def get_file_list(path):
@@ -22,23 +25,26 @@ def get_file_list(path):
     files = list(map(lambda x: x.replace("\\", "/"), files))
 
     # Set the return value and log warning if no files were found
-    str1 = str(files) if len(files) > 0 else logging.warning(f"no files found at path: '{path}'") or NO_PATH_ERROR
+    str1 = str(files) if len(files) > 0 else \
+        logging.warning(f"no files found at path: '{path}'") or ERROR_MESSAGE + "WHILE LOOKING FOR FILES"
     return str1
 
 
 def delete_file(path):
-    return_code = 0
-    # Ensure the path is using only /
-    path = path.replace("\\", "/")
+    return_value = SUCCESS_MESSAGE
+    # Convert path from binary string to string
+    path = path.decode()
+    # Ensure the path is in a valid format for glob search
+    path = path.replace("/", "\\")
     try:
         os.remove(path)
         # Signal removal as successful
     except OSError as err:
         logging.error(f"error while trying to delete file at {path}: {err}")
         # Return error code
-        return_code = "ERROR"
+        return_value = ERROR_MESSAGE + "WHILE DELETING FILE"
 
-    return return_code
+    return return_value
 
 
 def copy_file(src, dest):
@@ -54,8 +60,8 @@ def copy_file(src, dest):
     :return: 0 if successful, error code otherwise.
     :rtype: int
     """
-    return_code = 0
     # Ensure the paths are using only /
+    return_value = "COPY" + SUCCESS_MESSAGE
     src = src.replace("\\", "/")
     dest = dest.replace("\\", "/")
     try:
@@ -63,10 +69,10 @@ def copy_file(src, dest):
         # Signal copy as successful
     except OSError as err:
         logging.error(f"error while trying to copy file from {src} to {dest}: {err}")
-        # Return error code
-        return_code = err.args[0]
+        # Return error msg
+        return_value = ERROR_MESSAGE + "WHILE COPYING FILE"
 
-    return return_code
+    return return_value
 
 
 def execute_program(path):
@@ -79,19 +85,19 @@ def execute_program(path):
     :return: 0 if successful, error code otherwise.
     :rtype: int
     """
-    return_code = 0
+    return_value = "EXECUTE" + SUCCESS_MESSAGE
     # Ensure the path is using only /
     path = path.replace("\\", "/")
     try:
         subprocess.call(path)
     except OSError as err:
         logging.error(f"os error while trying to execute program at {path}: {err}")
-        return_code = err.args[0]
+        return_value = ERROR_MESSAGE + "WHILE EXECUTING FILE"
     except subprocess.CalledProcessError as err:
         logging.error(f"program error while trying to execute program at {path}: {err}")
-        return_code = err.args[0]
+        return_value = ERROR_MESSAGE + "WHILE EXECUTING FILE"
 
-    return return_code
+    return return_value
 
 
 def screenshot():
@@ -101,17 +107,14 @@ def screenshot():
     :return: 0 if successful, error code otherwise.
     :rtype: int
     """
-    return_value = None
     try:
         ImageGrab.grab(all_screens=True).save('screenshot.jpg')
         # call function to read photo
-        base64_bytes = b''
         with open('screenshot.jpg', 'rb') as img:
-            base64_bytes = base64.b64encode(img.read()).decode('utf-8')
-        return base64_bytes
+            return_value = base64.b64encode(img.read()).decode('utf-8')
     except OSError as err:
         logging.error(f"os error while trying to take a screenshot: {err}")
         # Return error code
-        return_value = None
+        return_value = ''
 
     return return_value

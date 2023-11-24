@@ -57,7 +57,7 @@ def receive(comm_socket):
     :type comm_socket: socket.socket
 
     :return: Tuple containing command and data parts of the message.
-    :rtype: tuple[bytes, bytes]
+    :rtype: tuple[str, bytes]
     """
     command = b''
     data = b''
@@ -71,7 +71,7 @@ def receive(comm_socket):
         command = b''
         data = b''
     finally:
-        return command, data if command != b'' and data != b'' else b'', b''
+        return command.decode(), data if command != b'' and data != b'' else '', b''
 
 
 def send(comm_socket, command, data):

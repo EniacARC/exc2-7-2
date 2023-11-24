@@ -40,7 +40,7 @@ def get_file_list(path):
     files = list(map(lambda x: x.replace("\\", "/"), files))
 
     # Set the return value and log warning if no files were found
-    str1 = str(files) if len(files) > 0 else \
+    str1 = ','.join(files) if len(files) > 0 else \
         logging.warning(f"no files found at path: '{path}'") or ERROR_MESSAGE + "WHILE LOOKING FOR FILES"
     return str1
 

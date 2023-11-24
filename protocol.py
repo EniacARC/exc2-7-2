@@ -1,3 +1,9 @@
+"""
+Author: Yonathan Chapal
+Program name: Exc 2.7
+Description: A basic commands server
+Date: 24/11/2023
+"""
 # struct(hton-int) + command + struct(hton-int) + params-binary
 import logging
 import socket
@@ -10,6 +16,15 @@ PACK_SIGN = "I"
 
 
 def receive_item(comm_socket):
+    """
+    Receive a length-data pair that is part of the message from the communication socket.
+
+    :param comm_socket: The communication socket.
+    :type comm_socket: socket.socket
+
+    :return: The received data.
+    :rtype: bytes
+    """
     data_len = b''
     data = b''
 
@@ -35,8 +50,15 @@ def receive_item(comm_socket):
 
 # send and receive funcs for the server that follow the established protocol
 def receive(comm_socket):
-    # command and data are binary
-    # len command + command + len data + data
+    """
+    Receive a message from the communication socket using the established protocol.
+
+    :param comm_socket: The communication socket.
+    :type comm_socket: socket.socket
+
+    :return: Tuple containing command and data parts of the message.
+    :rtype: tuple[bytes, bytes]
+    """
     command = b''
     data = b''
     buf = b''
@@ -53,16 +75,19 @@ def receive(comm_socket):
 
 
 def send(comm_socket, command, data):
-    # command and data are strings
-    # len command + command + len data + data
     """
-    sends the data, and it's length to the client. makes sure all the data was sent successfully
+    Send a message over the communication socket using the established protocol.
 
-    :param: comm_socket
-    :type: network socket
-    :param: data
-    :type: str
-    :return: if the message was sent successfully: 0 for yes, 1 for no
+    :param comm_socket: The communication socket.
+    :type comm_socket: socket.socket
+
+    :param command: The command part of the message.
+    :type command: str
+
+    :param data: The data part of the message.
+    :type data: str
+
+    :return: Return code (0 if successful, 1 if there's an error).
     :rtype: int
     """
     return_code = 0

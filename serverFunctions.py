@@ -18,6 +18,7 @@ from PIL import ImageGrab
 NO_PATH_ERROR = "no files found at path specified"
 SUCCESS_MESSAGE = "COMMAND FINISHED SUCCESSFULLY"
 ERROR_MESSAGE = "SOMETHING WENT WRONG WHILE EXECUTING"
+SEPERATOR = "|"
 
 
 def get_file_list(path):
@@ -71,27 +72,26 @@ def delete_file(path):
     return return_value
 
 
-def copy_file(src, dest):
+def copy_file(paths):
     """
     Copy a file from source to destination.
 
-    :param src: The source path of the file.
-    :type src: bytes
-
-    :param dest: The destination path for the copied file.
-    :type dest: bytes
+    :param paths: source-path|destination-path
+    :type paths: bytes
 
     :return: Success message if the copy was successful, otherwise an error message.
     :rtype: str
     """
     # Ensure the paths are using only /
     return_value = copy_file.__name__ + ' ' + SUCCESS_MESSAGE
-    # Convert paths from binary string to string
-    src = src.decode()
-    dest = dest.decode()
+    # Convert from binary string to string
+    paths = paths.decode()
     # Ensure the path is in a valid format for shutil.copy
-    src = src.replace("\\", "/")
-    dest = dest.replace("\\", "/")
+    paths = paths.replace("\\", "/")
+
+    paths = paths.split("|")
+    src = paths[0]
+    dest = paths[1]
     try:
         shutil.copy(src, dest)
         # Signal copy as successful
@@ -130,10 +130,10 @@ def execute_program(path):
     return return_value
 
 
-def screenshot():
+def screenshot(dump):
     """
     Capture a screenshot of all screens and save it as 'screenshot.jpg'.
-
+    :param dump: an empty byte string, used for symmetry perpuses
     :return: Base64-encoded image if the screenshot was successful, otherwise an error message.
     :rtype: str
     """

@@ -71,7 +71,7 @@ def receive(comm_socket):
         command = b''
         data = b''
     finally:
-        return command.decode(), data if command != b'' and data != b'' else '', b''
+        return command.decode(), data
 
 
 def send(comm_socket, command, data):

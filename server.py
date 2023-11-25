@@ -13,7 +13,7 @@ import stat
 
 # define network constants
 LISTEN_IP = '0.0.0.0'
-LISTEN_PORT = 1727
+LISTEN_PORT = 17207
 Q_LEN = 1
 MAX_PACKET = 1024
 COMMANDS = {"DIR": get_file_list.__call__, "DELETE": delete_file.__call__, "COPY": copy_file.__call__,
@@ -118,6 +118,8 @@ def handle_a_client(client_socket):
     try:
         while not disconnect:
             command, payload = receive(client_socket)
+            print(command)
+            print(payload)
             r_code = do_command(client_socket, command, payload)
             disconnect = False if r_code == 0 else True
     except socket.error as err:
@@ -152,10 +154,6 @@ def main():
         address_a_client(server_socket)
     except socket.error as err:
         logging.error(f"error involving the server socket detected!: {err}")
-    except KeyboardInterrupt:
-        print("hello :)")
-    finally:
-        server_socket.close()
 
 
 if __name__ == "__main__":
@@ -166,6 +164,8 @@ if __name__ == "__main__":
 
     # assert program
     # Create the folder for assert testing
+    if os.path.isdir(PARENT_DIR):
+        shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)
     os.mkdir(PARENT_DIR)
     try:
         with open((PARENT_DIR + FILE1), "w") as f:
@@ -194,9 +194,6 @@ if __name__ == "__main__":
         result = base64.b64decode(screenshot(b''))
         assert result != ''
         assert result[:4] == JPG_MAGIC_NUMS
-
         main()
     except (OSError, binascii.Error,):
         raise AssertionError("something went wrong")
-    finally:
-        shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)

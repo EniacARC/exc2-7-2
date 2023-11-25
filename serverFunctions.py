@@ -40,7 +40,7 @@ def get_file_list(path):
     files = list(map(lambda x: x.replace("\\", "/"), files))
 
     # Set the return value and log warning if no files were found
-    str1 = ','.join(files) if len(files) > 0 else \
+    str1 = '|'.join(files) if len(files) > 0 else \
         logging.warning(f"no files found at path: '{path}'") or ERROR_MESSAGE + "WHILE LOOKING FOR FILES"
     return str1
 
@@ -66,7 +66,7 @@ def delete_file(path):
     except OSError as err:
         logging.error(f"error while trying to delete file at {path}: {err}")
         # Return error code
-        return_value = ERROR_MESSAGE + "WHILE DELETING FILE"
+        return_value = ERROR_MESSAGE + " WHILE DELETING FILE"
 
     return return_value
 
@@ -98,7 +98,7 @@ def copy_file(src, dest):
     except OSError as err:
         logging.error(f"error while trying to copy file from {src} to {dest}: {err}")
         # Return error msg
-        return_value = ERROR_MESSAGE + "WHILE COPYING FILE"
+        return_value = ERROR_MESSAGE + " WHILE COPYING FILE"
 
     return return_value
 
@@ -125,7 +125,7 @@ def execute_program(path):
         return_value = ERROR_MESSAGE + "WHILE EXECUTING FILE"
     except subprocess.CalledProcessError as err:
         logging.error(f"program error while trying to execute program at {path}: {err}")
-        return_value = ERROR_MESSAGE + "WHILE EXECUTING FILE"
+        return_value = ERROR_MESSAGE + " WHILE EXECUTING FILE"
 
     return return_value
 

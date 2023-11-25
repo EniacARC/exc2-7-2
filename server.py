@@ -4,6 +4,7 @@ Program name: Exc 2.7
 Description: A basic commands server
 Date: 24/11/2023
 """
+import binascii
 import sys
 
 from protocol import *
@@ -23,6 +24,7 @@ EXEC_ASSERT = PROGRAM_DIR + "\\simple_script.exe"
 FILE1 = "file1.txt"
 FILE2 = "file2.txt"
 FILE_CONTENTS = "Hello I Am File1!"
+JPG_MAGIC_NUMS = b'\xff\xd8\xff\xe0'
 
 # define log constants
 LOG_FORMAT = '%(levelname)s | %(asctime)s | %(processName)s | %(message)s'
@@ -83,8 +85,17 @@ if __name__ == "__main__":
         with open((PARENT_DIR + FILE2), "r") as f:
             assert f.read() == "EXECUTED"
 
+        assert "SUCCESSFUL" in delete_file((PARENT_DIR + FILE2).encode())
+        result = get_file_list(PARENT_DIR.encode())
+        assert len(result.split('|')) == 1 and FILE1 in result
+
+        # Assert screenshot func returns a non-empty jpg image
+        result = base64.b64decode(screenshot())
+        assert result != ''
+        assert result[:4] == JPG_MAGIC_NUMS
+
         main()
-    except OSError:
+    except (OSError, binascii.Error,):
         raise AssertionError("something went wrong")
     finally:
         shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)

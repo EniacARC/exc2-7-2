@@ -12,6 +12,7 @@ import socket
 from io import BytesIO
 from PIL import Image
 from protocol import *
+from clientFunctions import *
 
 # define network constants
 SERVER_IP = '127.0.0.1'
@@ -24,7 +25,9 @@ STOP_SERVER_CONNECTION = "EXIT"
 PHOTO_COMMAND = "TAKE SCREENSHOT"
 SHOW_COMMAND = "SHOW COMMANDS"
 ERR_INPUT = "ERROR! unknown command!"
-COMMANDS = {"DIR": 1, "DELETE": 1, "COPY": 2, "EXECUTE": 1, "TAKE SCREENSHOT": 0, "EXIT": 0}
+COMMANDS = {"DIR": (1, decode_path.__call__), "DELETE": (1, general_out.__call__),
+            "COPY": (2, general_out.__call__), "EXECUTE": (1, general_out.__call__),
+            "TAKE SCREENSHOT": (0, decode_image.__call__), "EXIT": (0, general_out.__call__)}
 VALID_COMMANDS = f"valid commands: |{'|'.join(COMMANDS)}|" + ' - {' + SHOW_COMMAND + '}'
 
 # define log constants
@@ -32,34 +35,6 @@ LOG_FORMAT = '%(levelname)s | %(asctime)s | %(processName)s | %(message)s'
 LOG_LEVEL = logging.DEBUG
 LOG_DIR = 'log'
 LOG_FILE = LOG_DIR + '/loggerClient.log'
-
-
-def decode_image(base64_bytes):
-    """
-    Decode a base64-encoded image, save it to a file, and show it.
-
-    :param base64_bytes: The base64-encoded image data.
-    :type base64_bytes: str
-
-    :return: None
-    """
-    try:
-        # Save the base64 string to a file (optional)
-        with open('encoded_image.txt', 'w') as txt_file:
-            txt_file.write(base64_bytes)
-
-        # Decode the base64 string back to image data
-        decoded_image = base64.b64decode(base64_bytes)
-
-        # Create a PIL Image object from the decoded image data
-        image = Image.open(BytesIO(decoded_image))
-
-        # Save the image
-        image.save('output_image.jpg')
-        image.show()
-    except binascii.Error as err:
-        logging.error(f"eror while trying to decode image! '{err}'")
-        print(f"Error decoding base64: {err}")
 
 
 def main():
@@ -80,12 +55,14 @@ def main():
                     print(VALID_COMMANDS)
                 elif command in COMMANDS.keys():
                     if COMMANDS[command] != 0:
-                        args = [input(f"Enter arg: ") for _ in range(COMMANDS[command])]
+                        args = [input(f"Enter arg: ") for _ in range(COMMANDS[command][0])]
                         args = "|".join(args)
-                    print(f"sending: {command}, {args}")
                     send(client, command, args)
                     command, res = receive(client)
-                    print(res.decode())
+                    if command in COMMANDS.keys():
+                        COMMANDS[command][1](res)
+                    else:
+                        print(res)
                 else:
                     print(ERR_INPUT)
 

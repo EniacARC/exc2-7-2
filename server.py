@@ -17,7 +17,7 @@ LISTEN_PORT = 17207
 Q_LEN = 1
 MAX_PACKET = 1024
 COMMANDS = {"DIR": get_file_list.__call__, "DELETE": delete_file.__call__, "COPY": copy_file.__call__,
-            "EXECUTE": execute_program.__call__, "SCREENSHOT": screenshot.__call__}
+            "EXECUTE": execute_program.__call__, "TAKE SCREENSHOT": screenshot.__call__}
 
 # Assert constants
 PROGRAM_DIR = os.getcwd()
@@ -118,8 +118,7 @@ def handle_a_client(client_socket):
     try:
         while not disconnect:
             command, payload = receive(client_socket)
-            print(command)
-            print(payload)
+            logging.debug(f"{command}, {payload}")
             r_code = do_command(client_socket, command, payload)
             disconnect = False if r_code == 0 else True
     except socket.error as err:

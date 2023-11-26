@@ -36,7 +36,7 @@ def receive_item(comm_socket):
         data_len += buf
 
     if data_len != b'':
-        command_len = socket.htons(struct.unpack(PACK_SIGN, data_len)[0])
+        command_len = socket.htonl(struct.unpack(PACK_SIGN, data_len)[0])
 
         while len(data) < command_len:
             buf = comm_socket.recv(command_len - len(data))
@@ -91,8 +91,9 @@ def send(comm_socket, command, data):
     :rtype: int
     """
     return_code = 0
-    command_len = struct.pack(PACK_SIGN, socket.htons(len(command)))
-    data_len_net = struct.pack(PACK_SIGN, socket.htons(len(data)))
+    command_len = struct.pack(PACK_SIGN, socket.htonl(len(command)))
+    data_len_net = struct.pack(PACK_SIGN, socket.htonl(len(data)))
+    print(command, data)
     to_send = command_len + command.encode() + data_len_net + data.encode()
     sent = 0
     try:

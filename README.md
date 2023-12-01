@@ -7,4 +7,4 @@ A simple Netwrok protocol designed to invoke spedific actions in the server mach
         Data: Variable length, binary data relevant to the specified command.  
 
 sequence diagram (created using plantuml.com):   
-
+![alt text](https://github.com/[username]/[reponame]/blob/[branch]/sequence.png?raw=true)

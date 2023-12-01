@@ -1,10 +1,10 @@
-# exc2-7-2
-A simple Netwrok protocol designed to invoke spedific actions in the server machine. Each message is composed of a command, denoting the intended action, and accompanying binary data. The format includes fields for command length and data length, both represented as 4-byte unsigned integers in network byte order.
+# exc2-7-2  
+A simple Netwrok protocol designed to invoke spedific actions in the server machine. Each message is composed of a command, denoting the intended action, and accompanying binary data. The format includes fields for command length and data length, both represented as 4-byte unsigned integers in network byte order.  
 
-        Command Length: 4 bytes (unsigned integer, network byte order)
-        Command: Variable length, ASCII-encoded string
-        Data Length: 4 bytes (unsigned integer, network byte order)
-        Data: Variable length, binary data relevant to the specified command.
+        Command Length: 4 bytes (unsigned integer, network byte order)  
+        Command: Variable length, ASCII-encoded string  
+        Data Length: 4 bytes (unsigned integer, network byte order)  
+        Data: Variable length, binary data relevant to the specified command.  
 
 sequence diagram (created using plantuml.com): 
                                  ┌─┐                                                                                                                 
@@ -29,47 +29,46 @@ sequence diagram (created using plantuml.com):
                                 │ │                                                           │ │    │ Ready Server                                  
                                 │ │                                                           │ │<───┘                                               
                                 │ │                                                           │ │                                                    
-                                │ │                                                           │ │                                                    
-          ╔═══════╤═════════════╪═╪═══════════════════════════════════════════════════════════╪═╪═══════════════════════════════════════════════════╗
-          ║ LOOP  │             │ │                                                           │ │                                                   ║
-          ╟───────┘             │ │                                                           │ │                                                   ║
-          ║                     │ │                                                           │ │────┐                                              ║
-          ║                     │ │                                                           │ │    │ Listen for Connections                       ║
-          ║                     │ │                                                           │ │<───┘                                              ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║                     │ │ Send Command (len(command)"Command"len(Payload)"Payload") │ │                                                   ║
-          ║                     │ │ ─────────────────────────────────────────────────────────>│ │                                                   ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║         ╔═══════╤═══╪═╪═══════════════════════════════════════════════════════════╪═╪═════════════════════════════════════════╗         ║
-          ║         ║ LOOP  │  Command!="EXIT"&&command!=""                                   │ │                                         ║         ║
-          ║         ╟───────┘   │ │                                                           │ │                                         ║         ║
-          ║         ║           │ │                                                           │ │────┐                                    ║         ║
-          ║         ║           │ │                                                           │ │    │ res = Execute Command (Payload)    ║         ║
-          ║         ║           │ │                                                           │ │<───┘                                    ║         ║
-          ║         ║           │ │                                                           │ │                                         ║         ║
-          ║         ║           │ │                            res                            │ │                                         ║         ║
-          ║         ║           │ │ <─────────────────────────────────────────────────────────│ │                                         ║         ║
-          ║         ║           │ │                                                           │ │                                         ║         ║
-          ║         ║           │ │ Send Command (len(command)"Command"len(Payload)"Payload") │ │                                         ║         ║
-          ║         ║           │ │ ─────────────────────────────────────────────────────────>│ │                                         ║         ║
-          ║         ╚═══════════╪═╪═══════════════════════════════════════════════════════════╪═╪═════════════════════════════════════════╝         ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║         ╔══════╤════╪═╪═══════════════════════════════════════════════════════════╪═╪════════════╗                                      ║
-          ║         ║ ALT  │  command=="EXIT"                                                 │ │            ║                                      ║
-          ║         ╟──────┘    │ │                                                           │ │            ║                                      ║
-          ║         ║           │ │                 Send Command (4"EXIT"0"")                 │ │            ║                                      ║
-          ║         ║           │ │ ─────────────────────────────────────────────────────────>│ │            ║                                      ║
-          ║         ║           │ │                                                           │ │            ║                                      ║
-          ║         ║           │ │                       7"GOODBYE"0""                       │ │            ║                                      ║
-          ║         ║           │ │ <─────────────────────────────────────────────────────────│ │            ║                                      ║
-          ║         ╚═══════════╪═╪═══════════════════════════════════════════════════════════╪═╪════════════╝                                      ║
-          ║                     │ │                                                           │ │                                                   ║
-          ║                     │ │                                                           │ │────┐                                              ║
-          ║                     │ │                                                           │ │    │ Disconnect Client                            ║
-          ║                     │ │                                                           │ │<───┘                                              ║
-          ╚═════════════════════╪═╪═══════════════════════════════════════════════════════════╪═╪═══════════════════════════════════════════════════╝
+                                │ │                                                           │ │                                                      
+          ╔═══════╤═════════════╪═╪═══════════════════════════════════════════════════════════╪═╪═══════════════════════════════════════════════════╗  
+          ║ LOOP  │             │ │                                                           │ │                                                   ║  
+          ╟───────┘             │ │                                                           │ │                                                   ║  
+          ║                     │ │                                                           │ │────┐                                              ║  
+          ║                     │ │                                                           │ │    │ Listen for Connections                       ║  
+          ║                     │ │                                                           │ │<───┘                                              ║  
+          ║                     │ │                                                           │ │                                                   ║  
+          ║                     │ │ Send Command (len(command)"Command"len(Payload)"Payload") │ │                                                   ║  
+          ║                     │ │ ─────────────────────────────────────────────────────────>│ │                                                   ║  
+          ║                     │ │                                                           │ │                                                   ║  
+          ║                     │ │                                                           │ │                                                   ║  
+          ║         ╔═══════╤═══╪═╪═══════════════════════════════════════════════════════════╪═╪═════════════════════════════════════════╗         ║  
+          ║         ║ LOOP  │  Command!="EXIT"&&command!=""                                   │ │                                         ║         ║  
+          ║         ╟───────┘   │ │                                                           │ │                                         ║         ║   
+          ║         ║           │ │                                                           │ │────┐                                    ║         ║   
+          ║         ║           │ │                                                           │ │    │ res = Execute Command (Payload)    ║         ║   
+          ║         ║           │ │                                                           │ │<───┘                                    ║         ║    
+          ║         ║           │ │                                                           │ │                                         ║         ║    
+          ║         ║           │ │                            res                            │ │                                         ║         ║    
+          ║         ║           │ │ <─────────────────────────────────────────────────────────│ │                                         ║         ║    
+          ║         ║           │ │                                                           │ │                                         ║         ║   
+          ║         ║           │ │ Send Command (len(command)"Command"len(Payload)"Payload") │ │                                         ║         ║   
+          ║         ║           │ │ ─────────────────────────────────────────────────────────>│ │                                         ║         ║   
+          ║         ╚═══════════╪═╪═══════════════════════════════════════════════════════════╪═╪═════════════════════════════════════════╝         ║    
+          ║                     │ │                                                           │ │                                                   ║   
+          ║                     │ │                                                           │ │                                                   ║    
+          ║         ╔══════╤════╪═╪═══════════════════════════════════════════════════════════╪═╪════════════╗                                      ║   
+          ║         ║ ALT  │  command=="EXIT"                                                 │ │            ║                                      ║   
+          ║         ╟──────┘    │ │                                                           │ │            ║                                      ║   
+          ║         ║           │ │                 Send Command (4"EXIT"0"")                 │ │            ║                                      ║    
+          ║         ║           │ │ ─────────────────────────────────────────────────────────>│ │            ║                                      ║    
+          ║         ║           │ │                                                           │ │            ║                                      ║    
+          ║         ║           │ │                       7"GOODBYE"0""                       │ │            ║                                      ║  
+          ║         ║           │ │ <─────────────────────────────────────────────────────────│ │            ║                                      ║     
+          ║                     │ │                                                           │ │                                                   ║       
+          ║                     │ │                                                           │ │────┐                                              ║  
+          ║                     │ │                                                           │ │    │ Disconnect Client                            ║    
+          ║                     │ │                                                           │ │<───┘                                              ║   
+          ╚═════════════════════╪═╪═══════════════════════════════════════════════════════════╪═╪═══════════════════════════════════════════════════╝    
                                C└┬┘nt                                                       ┌─└┬┘──┐                                                 
                                  ┌─┐                                                        │Server│                                                 
                                  ║"│                                                        └──────┘                                                 

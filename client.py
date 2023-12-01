@@ -22,6 +22,7 @@ MAX_PACKET = 1024
 COMMAND_LEN = 4
 HEADER_LEN = 2
 STOP_SERVER_CONNECTION = "EXIT"
+CONNECTION_ERR = "SERVER CONNECTION WAS ABORTED!"
 PHOTO_COMMAND = "TAKE SCREENSHOT"
 SHOW_COMMAND = "SHOW COMMANDS"
 ERR_INPUT = "ERROR! unknown command!"
@@ -38,6 +39,9 @@ LOG_FILE = LOG_DIR + '/loggerClient.log'
 
 
 def main():
+    """
+    the main function; responsible for running the client code.
+    """
     # define an ipv4 tcp socket
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -53,27 +57,42 @@ def main():
 
                 if command == SHOW_COMMAND:
                     print(VALID_COMMANDS)
+
                 elif command in COMMANDS.keys():
                     if COMMANDS[command] != 0:
                         args = [input(f"Enter arg: ") for _ in range(COMMANDS[command][0])]
                         args = "|".join(args)
                     send(client, command, args)
                     command, res = receive(client)
-                    if command in COMMANDS.keys():
-                        COMMANDS[command][1](res)
+                    # is res is '' then the server terminated connection
+                    if res != b'':
+                        if command in COMMANDS.keys():
+                            COMMANDS[command][1](res)
+                        else:
+                            general_out(res)
                     else:
-                        print(res)
+                        print(CONNECTION_ERR)
+                        want_to_exit = True
                 else:
                     print(ERR_INPUT)
 
-                if command == "EXIT":
+                if command == STOP_SERVER_CONNECTION:
                     want_to_exit = True
+
             except KeyboardInterrupt:
+                logging.info("Program terminated by user.")
                 print("\nProgram terminated by user.")
+                send(client, STOP_SERVER_CONNECTION, '')
+                command, res = receive(client)
+                if res != b'':
+                    general_out(res)
                 want_to_exit = True
     except socket.error as err:
-        print(err)
+        print("Couldn't establish connection with server")
+        logging.error(f"Couldn't establish connection with server: {err}")
     finally:
+        logging.debug("closing socket")
+        print("closing client socket")
         client.close()
 
 

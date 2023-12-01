@@ -67,7 +67,7 @@ def receive(comm_socket):
         if command != b'':
             data = receive_item(comm_socket)
     except socket.error as err:
-        logging.error(f"error while trying to receive message from client: {err}")
+        logging.error(f"error while trying to receive message: {err}")
         command = b''
         data = b''
     finally:
@@ -93,7 +93,6 @@ def send(comm_socket, command, data):
     return_code = 0
     command_len = struct.pack(PACK_SIGN, socket.htonl(len(command)))
     data_len_net = struct.pack(PACK_SIGN, socket.htonl(len(data)))
-    print(command, data)
     to_send = command_len + command.encode() + data_len_net + data.encode()
     sent = 0
     try:
@@ -101,7 +100,7 @@ def send(comm_socket, command, data):
         while sent < len(to_send):
             sent += comm_socket.send(to_send[sent:])
     except socket.error as err:
-        logging.error(f"error while trying to send message from client: {err}")
+        logging.error(f"error while trying to send message: {err}")
         # signal something went wrong
         return_code = 1
     return return_code

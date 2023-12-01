@@ -32,6 +32,14 @@ def decode_image(base64_bytes):
 
 
 def decode_path(arr):
+    """
+    Decode and format a path represented as a byte array.
+
+    :param arr: The byte array representing the path.
+    :type arr: bytes
+
+    Prints the formatted path to the console.
+    """
     my_list = arr.decode().split("|")
     print(STRING_START)
     formatted_list = "\n".join(my_list)
@@ -39,4 +47,12 @@ def decode_path(arr):
 
 
 def general_out(data):
-    print(f"{STRING_START}: {data.decode()}")
+    """
+    Print general output information.
+
+    :param data: The data to be printed.
+    :type data: bytes
+
+    Prints formatted output information to the console.
+    """
+    print(f"{STRING_START} {data.decode()}")

@@ -114,6 +114,15 @@ def do_command(client_socket, command, payload):
 
 
 def handle_a_client(client_socket):
+    """
+    Handle a client connection.
+
+    :param client_socket: The socket object representing the client connection.
+    :type client_socket: socket.socket
+
+    :return: A boolean indicating whether the client should be disconnected.
+    :rtype: bool
+    """
     disconnect = False
     try:
         while not disconnect:
@@ -123,8 +132,8 @@ def handle_a_client(client_socket):
             disconnect = False if r_code == 0 else True
     except socket.error as err:
         logging.error(f"error involving the client socket detected!: {err}")
-    except KeyboardInterrupt:
-        print("How U Doin'?")
+    # except KeyboardInterrupt:
+    #   print("How U Doin'?")
     finally:
         client_socket.close()
         logging.debug("closed client socket")
@@ -146,6 +155,10 @@ def address_a_client(server_socket):
 
 
 def main():
+    """
+    the main function; responsible for running the server code.
+    :return:
+    """
     # define an ipv4 tcp socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -163,8 +176,6 @@ if __name__ == "__main__":
 
     # assert program
     # Create the folder for assert testing
-    if os.path.isdir(PARENT_DIR):
-        shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)
     os.mkdir(PARENT_DIR)
     try:
         with open((PARENT_DIR + FILE1), "w") as f:
@@ -193,6 +204,10 @@ if __name__ == "__main__":
         result = base64.b64decode(screenshot(b''))
         assert result != ''
         assert result[:4] == JPG_MAGIC_NUMS
+
+        shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)
         main()
     except (OSError, binascii.Error,):
         raise AssertionError("something went wrong")
+    finally:
+        shutil.rmtree(PARENT_DIR, onerror=rm_dir_readonly)

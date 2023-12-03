@@ -7,5 +7,6 @@ A simple Netwrok protocol designed to invoke specific actions in the server mach
         Data: Variable length, binary data relevant to the specified command.  
 
 sequence diagram (created using plantuml.com):   
-![sequence](https://github.com/EniacARC/exc2-7-2/assets/94797541/9c0cdc9e-ebea-4e33-a215-cdf3ab5dbdb8)
 
+
+![sequence](https://github.com/EniacARC/exc2-7-2/assets/94797541/371bee7d-dbb2-4412-8bc1-aee807a3521b)

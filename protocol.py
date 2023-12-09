@@ -1,7 +1,7 @@
 """
 Author: Yonathan Chapal
-Program name: Exc 2.7
-Description: A basic commands server
+Program name: protocol
+Description: implements symmetrical communication protocol for client-server interactions
 Date: 24/11/2023
 """
 # struct(hton-int) + command + struct(hton-int) + params-binary

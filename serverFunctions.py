@@ -1,7 +1,7 @@
 """
 Author: Yonathan Chapal
-Program name: Exc 2.7
-Description: A basic commands server
+Program name: serverFunctions.py
+Description: responsible for all the server services
 Date: 24/11/2023
 """
 import base64
@@ -132,8 +132,8 @@ def execute_program(path):
 
 def screenshot(dump):
     """
-    Capture a screenshot of all screens and save it as 'screenshot.jpg'.
-    :param dump: an empty byte string, used for symmetry perpuses
+     Capture a screenshot and convert it to a string.
+    :param dump: an empty byte string, used for symmetry purposes
     :return: Base64-encoded image if the screenshot was successful, otherwise an error message.
     :rtype: str
     """

@@ -1,3 +1,10 @@
+"""
+Author: Yonathan Chapal
+Program name: clientFunctions.py
+Description: stores all the scenery stdout functions for client.py
+Date: 24/11/2023
+"""
+
 import base64
 import binascii
 import logging

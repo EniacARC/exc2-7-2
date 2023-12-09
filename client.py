@@ -1,7 +1,7 @@
 """
 Author: Yonathan Chapal
-Program name: Exc 2.7
-Description: A basic commands server
+Program name: client.py
+Description: the client side of the application
 Date: 24/11/2023
 """
 import base64
@@ -60,7 +60,7 @@ def main():
 
                 elif command in COMMANDS.keys():
                     if COMMANDS[command] != 0:
-                        args = [input(f"Enter arg: ") for _ in range(COMMANDS[command][0])]
+                        args = [input(f"Enter arg #{i} of {COMMANDS[command][0]}: ") for i in range(COMMANDS[command][0])]
                         args = "|".join(args)
                     send(client, command, args)
                     command, res = receive(client)
@@ -102,4 +102,7 @@ if __name__ == "__main__":
         os.makedirs(LOG_DIR)
     logging.basicConfig(format=LOG_FORMAT, filename=LOG_FILE, level=LOG_LEVEL)
 
+    assert COMMANDS["COPY"][0] == 2
+    assert COMMANDS["DIR"][0] == 1
+    assert not COMMANDS["FHJDFH"]
     main()

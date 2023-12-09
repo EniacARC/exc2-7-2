@@ -1,7 +1,7 @@
 """
 Author: Yonathan Chapal
-Program name: Exc 2.7
-Description: A basic commands server
+Program name: server.py
+Description: the server side of the program
 Date: 24/11/2023
 """
 import binascii
@@ -70,6 +70,15 @@ def ready_server(server_socket):
 
 
 def connect_a_client(server_socket):
+    """
+    Waits for incoming connection request and established a connection with a client.
+
+    :param server_socket: The server socket to accept connections on.
+    :type server_socket: socket.socket
+
+    :return: A tuple containing the client socket and address.
+    :rtype: tuple[socket.socket, tuple[str, int]]
+    """
     logging.debug("waiting for incoming connection...")
     client, addr = server_socket.accept()
     logging.debug("connection established")
@@ -146,7 +155,7 @@ def address_a_client(server_socket):
     used to handle 1 client
     :param server_socket: the socket of the server
     :type: socket.socket
-    :return: -
+    :return: None
     """
     connected = True
     while connected:
@@ -157,7 +166,7 @@ def address_a_client(server_socket):
 def main():
     """
     the main function; responsible for running the server code.
-    :return:
+    :return: None
     """
     # define an ipv4 tcp socket
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -166,6 +175,8 @@ def main():
         address_a_client(server_socket)
     except socket.error as err:
         logging.error(f"error involving the server socket detected!: {err}")
+    finally:
+        server_socket.close()
 
 
 if __name__ == "__main__":

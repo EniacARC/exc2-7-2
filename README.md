@@ -26,7 +26,8 @@ Objective: The objective of the multiplayer Tetris game is to outlast your oppon
     Network Communication: The game communicates player moves and game state updates between clients and the server over a network connection, enabling seamless multiplayer gameplay.
     
 **screenshot:**
-![Screenshot_1](https://github.com/EniacARC/exc2-7-2/assets/94797541/ffb8f774-5be3-4446-aaf6-d7a9a2631630)
+![Screenshot_2](https://github.com/EniacARC/exc2-7-2/assets/94797541/9b2c125e-e897-4f88-82d7-ccbd0bf09c21)
+
 
 
 # *sequence diagram:*
